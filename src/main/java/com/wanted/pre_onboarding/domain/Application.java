@@ -1,6 +1,6 @@
 package com.wanted.pre_onboarding.domain;
 
-import com.wanted.pre_onboarding.domain.base.BaseTimeEntity;
+import com.wanted.pre_onboarding.domain.base.BaseEntity;
 import com.wanted.pre_onboarding.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +13,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "applications")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
-public class Application extends BaseTimeEntity {
+public class Application extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "app_id")

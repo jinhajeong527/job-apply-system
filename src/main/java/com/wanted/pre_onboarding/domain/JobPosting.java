@@ -1,8 +1,9 @@
 package com.wanted.pre_onboarding.domain;
 
-import com.wanted.pre_onboarding.domain.base.BaseTimeEntity;
+import com.wanted.pre_onboarding.domain.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "job_postings")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
-public class JobPosting extends BaseTimeEntity {
+public class JobPosting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +39,14 @@ public class JobPosting extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "company_id")
-    private  Company company;
+    private Company company;
+
+    @Builder
+    public JobPosting(String position, String description, int reward, Set<String> usedSkills, Company company) {
+        this.position = position;
+        this.description = description;
+        this.reward = reward;
+        this.usedSkills = usedSkills;
+        this.company = company;
+    }
 }

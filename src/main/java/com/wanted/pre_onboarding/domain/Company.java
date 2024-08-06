@@ -4,6 +4,7 @@ import com.wanted.pre_onboarding.domain.base.BaseTimeEntity;
 import com.wanted.pre_onboarding.domain.vo.Address;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,11 @@ public class Company extends BaseTimeEntity {
 
     @Embedded
     private Address address;
+
+    @Builder
+    public Company(String name, String industryName, Address address) {
+        this.name = name;
+        this.industryName = industryName;
+        this.address = address;
+    }
 }
