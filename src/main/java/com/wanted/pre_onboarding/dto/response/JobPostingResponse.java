@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
 @Getter
 @Setter
 public class JobPostingResponse {
@@ -14,17 +16,18 @@ public class JobPostingResponse {
     private String position;
     private String description;
     private int reward;
-
+    private Set<String> usedSkills;
     private LocalDateTime created;
 
     @Builder
-    public JobPostingResponse(Long registeredId, String position,
-                              String description, int reward, LocalDateTime created) {
+    public JobPostingResponse(Long registeredId, String position, String description,
+                              int reward, LocalDateTime created, Set<String> usedSkills) {
         this.registeredId = registeredId;
         this.position = position;
         this.description = description;
         this.reward = reward;
         this.created = created;
+        this.usedSkills = usedSkills;
     }
 
     public static JobPostingResponse fromEntity(JobPosting jobPosting) {
@@ -34,6 +37,7 @@ public class JobPostingResponse {
                 .description(jobPosting.getDescription())
                 .reward(jobPosting.getReward())
                 .created(jobPosting.getCreated())
+                .usedSkills(jobPosting.getUsedSkills())
                 .build();
     }
 

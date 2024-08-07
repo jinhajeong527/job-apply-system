@@ -16,7 +16,7 @@ public class JobPostingService {
     private final JobPostingRepository jobPostingRepository;
     private final CompanyService companyService;
     @Transactional
-    public JobPostingResponse registerJobPosting(JobPostingRequest request) {
+    public JobPostingResponse register(JobPostingRequest request) {
 
         Company foundCompany = companyService.findCompanyById(request.getCompanyId());
 
