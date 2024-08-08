@@ -77,7 +77,7 @@ class JobPostingServiceTest {
         // when & then
         assertThatThrownBy(() -> jobPostingService.edit(999L, editRequest)) // 존재하지 않는 ID 사용
                 .isInstanceOf(EntityNotFoundException.class)
-                .hasMessageContaining("수정을 요청한 채용공고를 찾지 못했습니다.");
+                .hasMessageContaining("요청한 채용공고를 찾지 못했습니다.");
     }
 
     @Test

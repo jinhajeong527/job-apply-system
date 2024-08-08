@@ -38,9 +38,13 @@ class JobPostingControllerTest {
     @DisplayName("채용공고 등록 성공 테스트")
     void should_ReturnCreatedResponse_When_ValidRequestProvided() throws Exception {
         Set<String> skillSet = Set.of("Python", "Django");
-        JobPostingResponse jpResponse = new JobPostingResponse(1L, "Python 개발자",
-                "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
-                1000000, LocalDateTime.now(), skillSet);
+        JobPostingResponse jpResponse = JobPostingResponse.builder()
+                .registeredId(1L)
+                .position("Python 개발자")
+                .description("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..")
+                .reward(1000000)
+                .usedSkills(skillSet)
+                .build();
         when(postingService.register(any(JobPostingRequest.class))).thenReturn(jpResponse);
 
         JobPostingRequest jpRequest = new JobPostingRequest(1L, "Python 개발자", 1000000,
