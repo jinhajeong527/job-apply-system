@@ -1,7 +1,7 @@
 package com.wanted.pre_onboarding.service;
 
 import com.wanted.pre_onboarding.domain.Company;
-import com.wanted.pre_onboarding.exception.CompanyNotFoundException;
+import com.wanted.pre_onboarding.exception.EntityNotFoundException;
 import com.wanted.pre_onboarding.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class CompanyService {
 
     public Company findCompanyById(Long companyId) {
         return companyRepository.findById(companyId)
-                .orElseThrow(() -> new CompanyNotFoundException("요청한 회사 정보를 찾지 못했습니다"));
+                .orElseThrow(() -> new EntityNotFoundException("요청한 회사 정보를 찾지 못했습니다"));
     }
 
 }
