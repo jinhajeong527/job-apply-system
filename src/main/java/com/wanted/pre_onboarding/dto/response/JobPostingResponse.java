@@ -18,15 +18,17 @@ public class JobPostingResponse {
     private int reward;
     private Set<String> usedSkills;
     private LocalDateTime created;
+    private LocalDateTime lastModified;
 
     @Builder
     public JobPostingResponse(Long registeredId, String position, String description,
-                              int reward, LocalDateTime created, Set<String> usedSkills) {
+                              int reward, LocalDateTime created, LocalDateTime lastModified, Set<String> usedSkills) {
         this.registeredId = registeredId;
         this.position = position;
         this.description = description;
         this.reward = reward;
         this.created = created;
+        this.lastModified = lastModified;
         this.usedSkills = usedSkills;
     }
 
@@ -37,6 +39,7 @@ public class JobPostingResponse {
                 .description(jobPosting.getDescription())
                 .reward(jobPosting.getReward())
                 .created(jobPosting.getCreated())
+                .lastModified(jobPosting.getLastModified())
                 .usedSkills(jobPosting.getUsedSkills())
                 .build();
     }

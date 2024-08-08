@@ -65,6 +65,9 @@ public class JobPosting extends BaseEntity {
     }
 
     public void updateUsedSkills(Set<String> newUsedSkills) {
+        if (this.usedSkills.equals(newUsedSkills)) {
+            return;
+        }
         this.usedSkills = new HashSet<>(newUsedSkills);
     }
 }

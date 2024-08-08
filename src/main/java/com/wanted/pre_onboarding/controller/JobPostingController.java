@@ -25,8 +25,8 @@ public class JobPostingController {
                 .body(response);
     }
 
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<JobPostingResponse> edit(@PathVariable("id") Long postId,
+    @PutMapping("/{postId}")
+    public ResponseEntity<JobPostingResponse> edit(@PathVariable("postId") Long postId,
                                                    @Valid @RequestBody JobPostingRequest request) {
         JobPostingResponse response = postingService.edit(postId, request);
         return ResponseEntity
