@@ -1,6 +1,7 @@
 package com.wanted.pre_onboarding.controller;
 
 import com.wanted.pre_onboarding.dto.request.JobPostingRequest;
+import com.wanted.pre_onboarding.dto.response.JobPostingDetail;
 import com.wanted.pre_onboarding.dto.response.JobPostingResponse;
 import com.wanted.pre_onboarding.dto.response.JobPostingSummary;
 import com.wanted.pre_onboarding.dto.response.RestResponse;
@@ -52,5 +53,13 @@ public class JobPostingController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new RestResponse<>("채용공고 목록을 성공적으로 조회하였습니다", list));
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getDetail(@PathVariable("postId") Long postId) {
+        JobPostingDetail detail = postingService.getDetail(postId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new RestResponse<>("채용공고를 성공적으로 조회하였습니다", detail));
     }
 }

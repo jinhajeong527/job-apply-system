@@ -2,7 +2,9 @@ package com.wanted.pre_onboarding.service;
 
 import com.wanted.pre_onboarding.domain.Company;
 import com.wanted.pre_onboarding.domain.JobPosting;
+import com.wanted.pre_onboarding.domain.vo.Address;
 import com.wanted.pre_onboarding.dto.request.JobPostingRequest;
+import com.wanted.pre_onboarding.dto.response.JobPostingDetail;
 import com.wanted.pre_onboarding.dto.response.JobPostingResponse;
 import com.wanted.pre_onboarding.dto.response.JobPostingSummary;
 import com.wanted.pre_onboarding.exception.EntityNotFoundException;
@@ -62,6 +64,30 @@ public class JobPostingService {
                 .stream()
                 .map(JobPostingSummary::fromEntity)
                 .toList();
+    }
+    @Transactional(readOnly = true)
+    public JobPostingDetail getDetail(Long postId) {
+        JobPosting jobPosting = findJobPosting(postId);
+
+        Company hiring = jobPosting.getCompany();
+        Address address = hiring.getAddress();
+
+        List<Long> list = jobPostingRepository.findByCompanyAndExcludeId(hiring, postId)
+                .stream()
+                .map(JobPosting::getId)
+                .toList();
+
+        return JobPostingDetail.builder()
+                .postId(jobPosting.getId())
+                .companyName(hiring.getName())
+                .country(address.getCountry())
+                .region(address.getDistrict())
+                .position(jobPosting.getPosition())
+                .reward(jobPosting.getReward())
+                .description(jobPosting.getDescription())
+                .usedSkills(jobPosting.getUsedSkills())
+                .others(list)
+                .build();
     }
 
     public JobPosting findJobPosting(Long postId) {
