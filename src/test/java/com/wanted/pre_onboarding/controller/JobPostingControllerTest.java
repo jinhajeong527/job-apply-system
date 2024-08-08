@@ -28,11 +28,11 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 class JobPostingControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @MockBean
-    JobPostingService postingService;
+    private JobPostingService postingService;
 
     @Test
     @DisplayName("채용공고 등록 성공 테스트")
@@ -79,7 +79,14 @@ class JobPostingControllerTest {
     @DisplayName("유효성 검증 실패 400 Bad Request 응답 테스트")
     void shouldReturnBadRequest_WhenValidationFails() throws Exception {
         // 유효성 검증 실패 데이터
-        JobPostingRequest invalidRequest = new JobPostingRequest(null, "", 0, "", Set.of());
+        JobPostingRequest invalidRequest =
+                JobPostingRequest.builder()
+                        .companyId(null)
+                        .position("")
+                        .reward(0)
+                        .description("")
+                        .usedSkills(Set.of())
+                        .build();
 
         mockMvc.perform(post("/job-posting")
                         .contentType(MediaType.APPLICATION_JSON)
