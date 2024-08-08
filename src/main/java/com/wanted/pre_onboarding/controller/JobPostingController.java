@@ -2,6 +2,7 @@ package com.wanted.pre_onboarding.controller;
 
 import com.wanted.pre_onboarding.dto.request.JobPostingRequest;
 import com.wanted.pre_onboarding.dto.response.JobPostingResponse;
+import com.wanted.pre_onboarding.dto.response.RestResponse;
 import com.wanted.pre_onboarding.service.JobPostingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,14 @@ public class JobPostingController {
     public ResponseEntity<JobPostingResponse> edit(@PathVariable("postId") Long postId,
                                                    @Valid @RequestBody JobPostingRequest request) {
         JobPostingResponse response = postingService.edit(postId, request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> delete(@PathVariable("postId") Long postId) {
+        RestResponse<JobPostingResponse> response = postingService.delete(postId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
