@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -32,10 +33,11 @@ public class JobPosting extends BaseEntity {
     @ElementCollection
     @CollectionTable(name = "used_skills",
             joinColumns = @JoinColumn(name = "job_posting_id"),
-            foreignKey = @ForeignKey(name = "FK_job_postings_used_skills")
+            foreignKey = @ForeignKey(name = "FK_job_postings_used_skills"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"job_posting_id", "skill_name"})
     )
     @Column(name = "skill_name")
-    private Set<String> usedSkills;
+    private Set<String> usedSkills = new HashSet<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "company_id")
@@ -48,5 +50,21 @@ public class JobPosting extends BaseEntity {
         this.reward = reward;
         this.usedSkills = usedSkills;
         this.company = company;
+    }
+
+    public void updatePosition(String position) {
+        this.position = position;
+    }
+
+    public void updateDescription(String newDescription) {
+        this.description = newDescription;
+    }
+
+    public void updateReward(Integer newReward) {
+        this.reward = newReward;
+    }
+
+    public void updateUsedSkills(Set<String> newUsedSkills) {
+        this.usedSkills = new HashSet<>(newUsedSkills);
     }
 }

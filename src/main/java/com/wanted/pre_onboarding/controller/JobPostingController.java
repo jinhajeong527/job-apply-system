@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/job-posting")
@@ -28,4 +25,12 @@ public class JobPostingController {
                 .body(response);
     }
 
+    @PostMapping("/edit/{id}")
+    public ResponseEntity<JobPostingResponse> edit(@PathVariable("id") Long postId,
+                                                   @Valid @RequestBody JobPostingRequest request) {
+        JobPostingResponse response = postingService.edit(postId, request);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
 }

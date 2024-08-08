@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +30,7 @@ public class JobPostingRequest {
     @NotEmpty(message = "At least one skill must be specified.")
     private Set<String> usedSkills;
 
+    @Builder
     public JobPostingRequest(Long companyId, String position, int reward, String description, Set<String> usedSkills) {
         this.companyId = companyId;
         this.position = position;
