@@ -43,6 +43,8 @@ public class JobPosting extends BaseEntity {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    private boolean isOpen = true;
+
     @Builder
     public JobPosting(String position, String description, int reward, Set<String> usedSkills, Company company) {
         this.position = position;
@@ -62,6 +64,10 @@ public class JobPosting extends BaseEntity {
 
     public void updateReward(Integer newReward) {
         this.reward = newReward;
+    }
+
+    public void updateOpenStatus(boolean isOpen) {
+        this.isOpen = isOpen;
     }
 
     public void updateUsedSkills(Set<String> newUsedSkills) {

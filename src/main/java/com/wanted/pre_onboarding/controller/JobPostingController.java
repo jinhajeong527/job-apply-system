@@ -2,6 +2,7 @@ package com.wanted.pre_onboarding.controller;
 
 import com.wanted.pre_onboarding.dto.request.JobPostingRequest;
 import com.wanted.pre_onboarding.dto.response.JobPostingResponse;
+import com.wanted.pre_onboarding.dto.response.JobPostingSummary;
 import com.wanted.pre_onboarding.dto.response.RestResponse;
 import com.wanted.pre_onboarding.service.JobPostingService;
 import jakarta.validation.Valid;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/job-posting")
@@ -37,9 +40,17 @@ public class JobPostingController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> delete(@PathVariable("postId") Long postId) {
-        RestResponse<JobPostingResponse> response = postingService.delete(postId);
+        JobPostingResponse response = postingService.delete(postId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(new RestResponse<>("요청한 채용공고를 성공적으로 삭제하였습니다", response));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> list() {
+        List<JobPostingSummary> list = postingService.list();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new RestResponse<>("채용공고 목록을 성공적으로 조회하였습니다", list));
     }
 }

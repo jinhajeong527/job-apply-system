@@ -4,12 +4,14 @@ import com.wanted.pre_onboarding.domain.Company;
 import com.wanted.pre_onboarding.domain.JobPosting;
 import com.wanted.pre_onboarding.dto.request.JobPostingRequest;
 import com.wanted.pre_onboarding.dto.response.JobPostingResponse;
-import com.wanted.pre_onboarding.dto.response.RestResponse;
+import com.wanted.pre_onboarding.dto.response.JobPostingSummary;
 import com.wanted.pre_onboarding.exception.EntityNotFoundException;
 import com.wanted.pre_onboarding.repository.JobPostingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,11 +50,18 @@ public class JobPostingService {
     }
 
     @Transactional
-    public RestResponse<JobPostingResponse> delete(Long postId) {
+    public JobPostingResponse delete(Long postId) {
         JobPosting foundJp = findJobPosting(postId);
         JobPostingResponse response = JobPostingResponse.fromEntity(foundJp);
         jobPostingRepository.delete(foundJp);
-        return new RestResponse<>("요청한 채용공고를 성공적으로 삭제하였습니다", response);
+        return response;
+    }
+    @Transactional(readOnly = true)
+    public List<JobPostingSummary> list() {
+        return jobPostingRepository.findByIsOpenTrue()
+                .stream()
+                .map(JobPostingSummary::fromEntity)
+                .toList();
     }
 
     public JobPosting findJobPosting(Long postId) {
