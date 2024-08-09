@@ -8,10 +8,11 @@ import com.wanted.pre_onboarding.repository.CompanyRepository;
 import com.wanted.pre_onboarding.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
-@Component
+
+@TestConfiguration
 @RequiredArgsConstructor
 public class DataInitializer {
 
