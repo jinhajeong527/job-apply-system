@@ -34,7 +34,10 @@ public class JobPosting extends BaseEntity {
     @CollectionTable(name = "used_skills",
             joinColumns = @JoinColumn(name = "job_posting_id"),
             foreignKey = @ForeignKey(name = "FK_job_postings_used_skills"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"job_posting_id", "skill_name"})
+            uniqueConstraints = @UniqueConstraint(
+                    name = "UK_job_posting_skill_name",
+                    columnNames = {"job_posting_id", "skill_name"}
+            )
     )
     @Column(name = "skill_name")
     private Set<String> usedSkills = new HashSet<>();
