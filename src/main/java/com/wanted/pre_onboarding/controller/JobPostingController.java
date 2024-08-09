@@ -41,10 +41,10 @@ public class JobPostingController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> delete(@PathVariable("postId") Long postId) {
-        JobPostingResponse response = postingService.delete(postId);
+        postingService.delete(postId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new RestResponse<>("요청한 채용공고를 성공적으로 삭제하였습니다", response));
+                .body(new RestResponse<Void>("요청한 채용공고를 성공적으로 삭제하였습니다"));
     }
 
     @GetMapping

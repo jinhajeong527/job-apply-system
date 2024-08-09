@@ -52,12 +52,10 @@ public class JobPostingService {
     }
 
     @Transactional
-    public JobPostingResponse delete(Long postId) {
-        JobPosting foundJp = findJobPosting(postId);
-        JobPostingResponse response = JobPostingResponse.fromEntity(foundJp);
-        jobPostingRepository.delete(foundJp);
-        return response;
+    public void delete(Long postId) {
+        jobPostingRepository.delete(findJobPosting(postId));
     }
+
     @Transactional(readOnly = true)
     public List<JobPostingSummary> list() {
         return jobPostingRepository.findByIsOpenTrue()
