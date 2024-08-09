@@ -4,6 +4,7 @@ import com.wanted.pre_onboarding.config.DataInitializer;
 import com.wanted.pre_onboarding.domain.Company;
 import com.wanted.pre_onboarding.domain.JobPosting;
 import com.wanted.pre_onboarding.dto.request.JobPostingRequest;
+import com.wanted.pre_onboarding.dto.response.JobPostingDetail;
 import com.wanted.pre_onboarding.dto.response.JobPostingResponse;
 import com.wanted.pre_onboarding.dto.response.JobPostingSummary;
 import com.wanted.pre_onboarding.exception.EntityNotFoundException;
@@ -47,6 +48,8 @@ class JobPostingServiceTest {
     void setUp() {
         Company wantedLab = companyRepository.findById(1L)
                 .orElseThrow(EntityNotFoundException::new);
+        Company naver = companyRepository.findById(2L)
+                .orElseThrow(EntityNotFoundException::new);
 
         JobPosting jobPosting1 = JobPosting.builder()
                 .position("Python 개발자")
@@ -56,6 +59,25 @@ class JobPostingServiceTest {
                 .company(wantedLab)
                 .build();
         jobPostingRepository.save(jobPosting1);
+
+        JobPosting jobPosting2 = JobPosting.builder()
+                .position("Java 개발자")
+                .description("원티드랩에서 자바 개발자를 채용합니다.")
+                .reward(1000000)
+                .usedSkills(Set.of("Python", "Django"))
+                .company(wantedLab)
+                .build();
+        jobPostingRepository.save(jobPosting2);
+
+        JobPosting jobPosting3 = JobPosting.builder()
+                .position("백엔드 개발자")
+                .description("네이버에서 백엔드 개발자를 채용합니다.")
+                .reward(1000000)
+                .usedSkills(Set.of("Python", "Go"))
+                .company(naver)
+                .build();
+        jobPosting3.updateOpenStatus(false);
+        jobPostingRepository.save(jobPosting3);
     }
 
     @Test
@@ -139,34 +161,7 @@ class JobPostingServiceTest {
     @Test
     @DisplayName("공개된 채용 공고만 목록에 포함되는지 확인")
     void shouldReturnOnlyOpenJobPostings_WhenListIsCalled() {
-        // given
-        Company wantedLab = companyRepository.findById(1L)
-                .orElseThrow(EntityNotFoundException::new);
-        Company naver = companyRepository.findById(2L)
-                .orElseThrow(EntityNotFoundException::new);
-
-        JobPosting jobPosting2 = JobPosting.builder()
-                .position("Java 개발자")
-                .description("원티드랩에서 자바 개발자를 채용합니다.")
-                .reward(1000000)
-                .usedSkills(Set.of("Python", "Django"))
-                .company(wantedLab)
-                .build();
-        jobPostingRepository.save(jobPosting2);
-
-        JobPosting jobPosting3 = JobPosting.builder()
-                .position("백엔드 개발자")
-                .description("네이버에서 백엔드 개발자를 채용합니다.")
-                .reward(1000000)
-                .usedSkills(Set.of("Python", "Go"))
-                .company(naver)
-                .build();
-        jobPosting3.updateOpenStatus(false);
-        jobPostingRepository.save(jobPosting3);
-
-        // when
         List<JobPostingSummary> summaries = jobPostingService.list();
-        // Then
         assertThat(summaries).hasSize(2);
     }
 
@@ -180,4 +175,52 @@ class JobPostingServiceTest {
         // Then
         assertThat(summaries).isEmpty();
     }
+
+    @Test
+    @DisplayName("존재하는 postId로 상세 정보 요청 시 올바른 JobPostingDetail 객체 반환")
+    void shouldReturnDetail_WhenRequestWithExistingId() {
+        // given
+        Long validPostId = 1L;
+        JobPosting savedJobPosting = jobPostingService.findJobPosting(validPostId);
+
+        // when
+        JobPostingDetail detail = jobPostingService.getDetail(validPostId);
+
+        // then
+        assertThat(detail).isNotNull();
+        assertThat(detail.getPostId()).isEqualTo(validPostId);
+        assertThat(detail.getCompanyName()).isEqualTo(savedJobPosting.getCompany().getName());
+        assertThat(detail.getCountry()).isEqualTo(savedJobPosting.getCompany().getAddress().getCountry());
+        assertThat(detail.getRegion()).isEqualTo(savedJobPosting.getCompany().getAddress().getDistrict());
+        assertThat(detail.getPosition()).isEqualTo(savedJobPosting.getPosition());
+        assertThat(detail.getReward()).isEqualTo(savedJobPosting.getReward());
+        assertThat(detail.getDescription()).isEqualTo(savedJobPosting.getDescription());
+        assertThat(detail.getUsedSkills()).containsExactlyInAnyOrderElementsOf(savedJobPosting.getUsedSkills());
+        assertThat(detail.getOthers()).doesNotContain(validPostId);
+        assertThat(detail.getOthers()).contains(2L);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 postId로 상세 정보 요청 시 EntityNotFoundException 발생")
+    void shouldThrowEntityNotFoundException_WhenInvalidPostIdProvided() {
+        // given
+        Long invalidPostId = 999L;
+
+        // when & then
+        assertThatThrownBy(() -> jobPostingService.getDetail(invalidPostId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("요청한 채용공고를 찾지 못했습니다.");
+    }
+
+    @Test
+    @DisplayName("회사의 다른 채용공고 없을 경우 others Empty 리스트 반환")
+    void shouldReturnEmptyOtherList_WhenNoOtherJobPostingExists() {
+        // given
+        Long validPostId = 3L;
+        // when
+        JobPostingDetail detail = jobPostingService.getDetail(validPostId);
+        // then
+        assertThat(detail.getOthers()).isEmpty();
+    }
+
 }
